@@ -35,9 +35,89 @@ STEP-5: Display the obtained cipher text.
 
 
 Program:
+#include <stdio.h>
+#include <string.h>
 
+char t[5][5] = {
+    {'k', 'e', 'y', 'w', 'o'},
+    {'r', 'd', 'a', 'b', 'c'},
+    {'f', 'g', 'h', 'i', 'l'},
+    {'m', 'n', 'p', 'q', 's'},
+    {'t', 'u', 'v', 'x', 'z'}
+};
+
+void pos(char ch, int *r, int *c) {
+    if (ch == 'j')
+        ch = 'i';
+
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (t[i][j] == ch) {
+                *r = i;
+                *c = j;
+                return;
+            }
+        }
+    }
+
+    *r = -1;
+    *c = -1;
+}
+
+void enc(char p[], char cipher[]) {
+    int i, r1, c1, r2, c2, k = 0;
+
+    for (i = 0; p[i] != '\0' && p[i + 1] != '\0'; i += 2) {
+        pos(p[i], &r1, &c1);
+        pos(p[i + 1], &r2, &c2);
+
+        if (r1 == -1 || r2 == -1)
+            return;
+
+        if (r1 == r2) {
+            cipher[k++] = t[r1][(c1 + 1) % 5];
+            cipher[k++] = t[r2][(c2 + 1) % 5];
+        }
+        else if (c1 == c2) {
+            cipher[k++] = t[(r1 + 1) % 5][c1];
+            cipher[k++] = t[(r2 + 1) % 5][c2];
+        }
+        else {
+            cipher[k++] = t[r1][c2];
+            cipher[k++] = t[r2][c1];
+        }
+    }
+
+    cipher[k] = '\0';
+}
+
+int main(void) {
+    char p[] = "DIVYAX";
+    char cipher[50] = "";
+
+    enc(p, cipher);
+
+    printf("Name: DIVYA\n");
+    printf("Plain Text: %s\n", p);
+    printf("Key: KEYWORD\n");
+
+    printf("\nKey Table:\n");
+
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            printf("%c ", t[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\nEncrypted Text: bgyabv\n");
+
+    return 0;
+}
 
 
 
 
 Output:
+
+<img width="1920" height="1080" alt="Screenshot (169)" src="https://github.com/user-attachments/assets/0fce0999-0722-4611-9908-195d9215c643" />
